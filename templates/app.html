@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <title>Demo App</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<style>
+  body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #e9e9e9;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #2196F3;
+  color: white;
+}
+
+.topnav .search-container {
+  float: right;
+}
+
+.topnav input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.topnav .search-container button {
+  float: right;
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #ccc;
+}
+
+
+body {
+    background-color: rgb(224,224,224);
+}
+h1 {
+    font-weight: bold;
+    text-align:center;
+}
+.like, .dislike {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background: lightgreen;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border-radius: 4px;
+}
+
+#qty1, #qty2 {
+    border: none;
+    width:30px;
+    background: transparent;
+}
+li {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+</style>
+
+<body>  
+
+​<h1>Demo Application</h1>
+
+<div class="container">
+  <div class="topnav">
+  <a class="active" href="#home">Basic Questions</a>
+  <div class="search-container">
+    <form>
+      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Questions.." name="search">
+      <button type="text" id="myInput" onclick="myFunction()"><i class="fa fa-search"></i></button>
+    </form>
+  </div>
+</div>
+
+
+<ul class="list-group"  id="myUL">
+    {% for user in data['results'] %}
+
+        <li class="list-group-item d-flex justify-content-between align-items-center row_{{user.id}}">
+        <a href="#">{{user.Question}}
+        <div class="float-right"> 
+        <a class="like" type="button" onclick="NoOfLikes(id, '{{user.like}}')" id="{{user.id}}">
+            <span class="glyphicon glyphicon-thumbs-up"></span> <input id="qty1" name="qty1" readonly="readonly" type="text" value="{{user.like}}" />
+        </a>
+        <a class="dislike" type="button" onclick="NoOfLikes(id, '{{user.dislike}}')" id="{{user.id}}">
+            <span class="glyphicon glyphicon-thumbs-down"></span> <input id="qty2" name="qty2" readonly="readonly" type="text" value="{{user.dislike}}" />
+        </a>
+        </div>
+        </a>
+        </li>
+
+    {% endfor %}
+</ul>    
+
+
+<script>
+ 
+function NoOfLikes(id, noOfLikesAndDislikes) {
+        var input, likes;
+           if(noOfLikesAndDislikes < 0) {
+             likes = (parseInt(noOfLikesAndDislikes) - 1);
+           }else {
+            likes = (parseInt(noOfLikesAndDislikes) + 1);
+           }
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                        var dictionary = JSON.parse(this.responseText);
+                        new_row = '<a href="#">'+dictionary[0].Question+
+                                    '<div class="float-right">'+ 
+                        '<a class="like" type="button" onclick="NoOfLikes(id,'+dictionary[0].like+')" id="'+dictionary[0].id+'">'+
+                            '<span class="glyphicon glyphicon-thumbs-up"></span> <input id="qty1" name="qty1" readonly="readonly" type="text" value="'+dictionary[0].like+'" />'+
+                        '</a>&nbsp;'+
+                        '<a class="dislike type="button" onclick="NoOfLikes(id,'+dictionary[0].dislike+')" id="'+dictionary[0].id+'">'+
+                            '<span class="glyphicon glyphicon-thumbs-down"></span> <input id="qty2"  name="qty2" readonly="readonly" type="text" value="'+dictionary[0].dislike+'"/>'+
+                        '</a>'+
+                        '</div>'+
+                        '</a>';
+                        document.getElementsByClassName("row_"+dictionary[0].id)[0].innerHTML = new_row;
+                }         
+              };
+              xhttp.open("POST", "/like_update?likes="+likes+"&id="+id, true);
+              xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+              xhttp.send();
+}
+
+function myFunction() {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("myInput");
+    debugger;
+    filter = input.value;
+    var xhttp = new XMLHttpRequest();
+    var search_list = "";
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+
+        var dictionary = JSON.parse(this.responseText);
+
+        for (var i in dictionary) {
+
+            search_list += '<li class="list-group-item d-flex justify-content-between align-items-center row_'+dictionary[i].id+'">'+
+                '<a href="#">'+dictionary[i].Question+
+                                    '<div class="float-right">'+ 
+                        '<a class="like" type="button" onclick="NoOfLikes(id,'+dictionary[i].like+')" id="'+dictionary[i].id+'">'+
+                            '<span class="glyphicon glyphicon-thumbs-up"></span> <input id="qty1" name="qty1" readonly="readonly" type="text" value="'+dictionary[i].like+'" />'+
+                        '</a>&nbsp;'+
+                        '<a class="dislike"type="button" onclick="NoOfLikes(id,'+dictionary[i].dislike+')" id="'+dictionary[i].id+'">'+
+                            '<span class="glyphicon glyphicon-thumbs-down"></span> <input id="qty2"  name="qty2" readonly="readonly" type="text" value="'+dictionary[i].dislike+'" />'+
+                        '</a>'+
+                    '</div>'+
+                '</a>'+
+            '</li>'
+
+        }
+        document.getElementById('myUL').innerHTML = search_list; 
+
+      }         
+    };
+    xhttp.open("POST", "/search_controller?filter="+filter, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
+}
+
+</script>
+​
+
+</body>
+
+</html>
+
+
+​
+
