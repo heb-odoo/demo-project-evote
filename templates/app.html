@@ -120,8 +120,8 @@ li {
 
 ​<h1>Demo Application</h1>
 <ul style="list-style: none; text-align: right;">
-    <li id="countLikes">Likes:{{ data['totalLikes'] }}</li>
-    <li id="countDisLikes">Dislikes:{{ data['totalDisLikes'] }}</li>
+    <li id="countLikes">Likes:{{ session_data['totalLikes'] }}</li>
+    <li id="countDisLikes">Dislikes:{{ session_data['totalDisLikes'] }}</li>
   </ul>
 <div class="container">
   <div class="topnav">
@@ -170,23 +170,21 @@ function NoOfLikes(id, noOfLikesAndDislikes) {
         xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                         var dictionary = JSON.parse(this.responseText);
-                        console.log(dictionary.row);
-                        var row = dictionary.row[0];
-                        var tLike = dictionary.totalLikes;
-                        var tDisLike = dictionary.totalDisLikes;
-                        new_row = '<a href="#" id="color_change">'+row.Question+
+                        debugger;
+                        console.log(dictionary);
+                        new_row = '<a href="#" id="color_change">'+dictionary["updated_row"][0].Question+
                                     '<div class="float-right">'+ 
-                        '<a class="like" type="button" id="'+row.id+'">'+
-                            '<span class="glyphicon glyphicon-thumbs-up"></span> <input id="qty1" name="qty1" readonly="readonly" type="text" value="'+row.like+'" />'+
+                        '<a class="like" type="button" id="'+dictionary["updated_row"][0].id+'">'+
+                            '<span class="glyphicon glyphicon-thumbs-up"></span> <input id="qty1" name="qty1" readonly="readonly" type="text" value="'+dictionary["updated_row"][0].like+'" />'+
                         '</a>&nbsp;'+
-                        '<a class="dislike type="button" id="'+row.id+'">'+
-                            '<span class="glyphicon glyphicon-thumbs-down"></span> <input id="qty2"  name="qty2" readonly="readonly" type="text" value="'+row.dislike+'"/>'+
+                        '<a class="dislike type="button" id="'+dictionary["updated_row"][0].id+'">'+
+                            '<span class="glyphicon glyphicon-thumbs-down"></span> <input id="qty2"  name="qty2" readonly="readonly" type="text" value="'+dictionary["updated_row"][0].dislike+'"/>'+
                         '</a>'+
                         '</div>'+
                         '</a>';
-                        document.getElementsByClassName("row_"+row.id)[0].innerHTML = new_row;
-                        document.getElementById("countLikes").innerHTML = tLike;
-                        document.getElementById("countDisLikes").innerHTML = tDisLike;
+                        document.getElementsByClassName("row_"+dictionary["updated_row"][0].id)[0].innerHTML = new_row;
+                        document.getElementById("countLikes").innerHTML ="Likes: "+ dictionary["session"]['totalLikes'];
+                        document.getElementById("countDisLikes").innerHTML = "Dislikes:"+dictionary["session"]['totalDisLikes'];
                 }         
               };
               xhttp.open("POST", "/like_update?likes="+likes+"&id="+id, true);
